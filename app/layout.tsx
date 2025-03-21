@@ -3,6 +3,7 @@ import { headingFont, bodyFont, gameFont, altHeadingFont } from "./fonts";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
+import { Layout } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "W Bingo App",
