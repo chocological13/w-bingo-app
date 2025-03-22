@@ -1,6 +1,8 @@
 "use client";
 import LayoutWrapper from "@/components/layout/Layout";
+import { useAuth } from "@/components/auth-provider";
 
 export default function Home() {
-  return <LayoutWrapper>Home</LayoutWrapper>;
+  const { user } = useAuth();
+  return <LayoutWrapper>{user ? user.displayName : "Home"}</LayoutWrapper>;
 }
