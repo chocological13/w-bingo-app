@@ -3,8 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import LogOutButton from "@/components/auth/LogOutButton";
 
 const Header = () => {
   return (
@@ -12,7 +11,6 @@ const Header = () => {
       <div className="container flex justify-between h-16 items-center">
         <div className="flex">
           <Link href="/">
-            {/*<span className="game-title mr-2">Bingo</span>*/}
             <span className="inline text-primary-400 text-lg alt-heading">
               Bingo
             </span>
@@ -20,9 +18,7 @@ const Header = () => {
         </div>
         <div className="flex flex-row items-center gap-2">
           <ThemeToggle />
-          <Button variant="outline" className="rounded-full">
-            <LogOut />
-          </Button>
+          <LogOutButton />
         </div>
       </div>
     </header>

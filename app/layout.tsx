@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { headingFont, bodyFont, gameFont, altHeadingFont } from "./fonts";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/context/theme-provider";
 import { cn } from "@/lib/utils";
 import { Layout } from "lucide-react";
-import { AuthProvider } from "@/components/auth-provider";
+import { AuthProvider } from "@/context/auth-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "W Bingo App",
@@ -27,13 +28,11 @@ export default function RootLayout({
           bodyFont.className
         )}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AuthProvider>{children}</AuthProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <AuthProvider>
+            <Toaster richColors position="top-right" />
+            {children}
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

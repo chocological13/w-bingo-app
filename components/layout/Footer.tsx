@@ -2,12 +2,12 @@ import React from "react";
 import { Heart } from "lucide-react";
 import Link from "next/link";
 
-const Footer = () => {
+const Footer = ({ className }: { className?: string }) => {
   const githubUsername = process.env.NEXT_PUBLIC_GITHUB_USERNAME || "";
   const githubUrl = process.env.NEXT_PUBLIC_GITHUB_URL || "";
 
   return (
-    <footer className="border-t bg-muted py-4">
+    <footer className={className}>
       <div className="container flex flex-col items-center justify-center">
         <p className="text-center text-sm leading-loose text-muted-foreground">
           Made with{" "}

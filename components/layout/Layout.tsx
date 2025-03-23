@@ -7,7 +7,7 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1 container py-6 md:py-10">{children}</main>
-      <Footer />
+      <Footer className="border-t bg-muted py-4" />
     </div>
   );
 };
