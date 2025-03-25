@@ -1,12 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import CreateBoardForm from "@/components/bingo/CreateBoardForm";
-import { Timestamp } from "@firebase/firestore";
 import BingoBoardComponent from "@/components/bingo/BingoBoardComponent";
 import { useBingoBoard } from "@/hooks/useBingoBoard";
 import LoaderSpinner from "@/components/LoaderSpinner";
 import BoardList from "@/components/bingo/BoardList";
 import { BingoBoard } from "@/constants/types";
+import { useBingoGame } from "@/hooks/useBingoGame";
 
 const Bingo = () => {
   const { boards, createNewBoard, deleteBoard, toggleItem, loading } =
@@ -14,6 +14,7 @@ const Bingo = () => {
   const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
   const [selectedBoard, setSelectedBoard] = useState<BingoBoard | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const { resetBoard, randomizeBoard } = useBingoGame(selectedBoard);
 
   useEffect(() => {
     if (boards && boards.length > 0) {
@@ -23,6 +24,13 @@ const Bingo = () => {
       }
     }
   }, [selectedBoardId, boards]);
+
+  const handleSelectBoard = (boardId: string) => {
+    // Force state update even if selecting the same board
+    // To make sure we can select the same board after going back to the list
+    setSelectedBoardId(null); // Reset first
+    setTimeout(() => setSelectedBoardId(boardId), 0); // Set new board after a brief delay
+  };
 
   const handleCreateBoard = async (
     title: string,
@@ -55,19 +63,28 @@ const Bingo = () => {
 
   return (
     <div>
-      <BoardList
-        boards={boards}
-        setSelectedBoard={setSelectedBoardId}
-        setShowCreateForm={setShowCreateForm}
-        deleteBoard={deleteBoard}
-      />
-      {selectedBoard && (
+      {showCreateForm ? (
+        <CreateBoardForm
+          onSubmit={handleCreateBoard}
+          setShowForm={setShowCreateForm}
+          boardPresent={boards && boards.length > 0 ? true : false}
+        />
+      ) : selectedBoard ? (
         <BingoBoardComponent
           board={selectedBoard}
           toggleItemAction={toggleItem}
+          setSelectedBoardIdAction={setSelectedBoard}
+          resetBoardAction={resetBoard}
+          randomizedBoardAction={randomizeBoard}
+        />
+      ) : (
+        <BoardList
+          boards={boards}
+          setSelectedBoard={handleSelectBoard}
+          setShowCreateForm={setShowCreateForm}
+          deleteBoard={deleteBoard}
         />
       )}
-      <CreateBoardForm onSubmit={handleCreateBoard} />
     </div>
   );
 };

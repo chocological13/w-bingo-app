@@ -132,6 +132,17 @@ export const bingoService = {
     }
   },
 
+  // Update game state
+  updateGameStatus: async (boardId: string) => {
+    try {
+      const boardRef = doc(db, "boards", boardId);
+      await updateDoc(boardRef, { wonAt: Timestamp.now() });
+    } catch (error) {
+      console.error("Error updating game status: ", error);
+      throw error;
+    }
+  },
+
   // Update board item text
   updateBoardItem: async (boardId: string, itemId: string, text: string) => {
     try {

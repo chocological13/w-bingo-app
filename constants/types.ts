@@ -15,6 +15,7 @@ export type BingoBoard = {
   freeSpaceText: string;
   createdAt: Timestamp;
   lastPlayed?: Timestamp;
+  wonAt?: Timestamp;
   userId: string;
 };
 
@@ -29,12 +30,4 @@ export type GameState = {
   activeGame: boolean;
   loading: boolean;
   error: string | null;
-  // achievements: BoardAchievements;
 };
-
-// export type BoardAchievements = {
-//   totalBoards: number;
-//   completedBoards: number;
-//   averageCompletionRate: number;
-//   mostCompletedBoard: BingoBoardComponent;
-// };

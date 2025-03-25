@@ -1,10 +1,11 @@
 import { BingoBoard } from "@/constants/types";
 import React from "react";
 import { motion } from "framer-motion";
-import { Grid3X3, Plus } from "lucide-react";
+import { CheckIcon, Grid3X3, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { BiSolidTrash } from "react-icons/bi";
+import { FcCheckmark } from "react-icons/fc";
 
 interface BoardListProps {
   boards: BingoBoard[];
@@ -53,7 +54,15 @@ const BoardList: React.FC<BoardListProps> = ({
               onClick={() => setSelectedBoard(board.id)}
             >
               <CardHeader className="flex justify-between items-center">
-                <CardTitle>{board.title}</CardTitle>
+                <CardTitle className="flex flex-row gap-1 items-center">
+                  {board.title}
+                  {board.wonAt && (
+                    <span className="ml-1 flex flex-row gap-1 text-green-500 border-green-100 border-1 text-xs rounded-full px-1">
+                      <p>bingo</p>
+                      <FcCheckmark />
+                    </span>
+                  )}
+                </CardTitle>
                 <Button variant="ghost" onClick={() => deleteBoard(board.id)}>
                   <BiSolidTrash className="text-red-600" />
                 </Button>

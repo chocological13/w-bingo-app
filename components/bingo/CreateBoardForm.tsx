@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
@@ -25,6 +26,7 @@ import { useForm } from "react-hook-form";
 import { bingoFormSchema, BingoFormSchemaType } from "@/schema/bingoSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
+import { MdArrowBackIos } from "react-icons/md";
 
 interface CreateBoardFormProps {
   onSubmit: (
@@ -33,9 +35,15 @@ interface CreateBoardFormProps {
     freeSpaceText: string,
     bukItems?: string
   ) => void;
+  setShowForm: (show: boolean) => void;
+  boardPresent: boolean;
 }
 
-const CreateBoardForm: React.FC<CreateBoardFormProps> = ({ onSubmit }) => {
+const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
+  onSubmit,
+  setShowForm,
+  boardPresent,
+}) => {
   const { playClickSound, playPopSound } = useSoundEffects();
   const [bulkEntryMode, setBulkEntryMode] = useState<boolean>(false);
 
@@ -72,12 +80,24 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({ onSubmit }) => {
       transition={{ duration: 0.3 }}
     >
       <Card className="w-full max-w-md mx-auto shadow-lg">
-        <CardHeader>
-          <CardTitle className="font-heading text-primary-600 text-2xl">
-            Create Bingo Board
-          </CardTitle>
-          <CardDescription>Customize your bingo board settings</CardDescription>
+        <CardHeader className="flex flex-col items-start">
+          <div className="w-full flex justify-between items-center">
+            <div>
+              <CardTitle className="font-heading text-primary-600 text-2xl">
+                Create Bingo Board
+              </CardTitle>
+              <CardDescription>
+                Customize your bingo board settings
+              </CardDescription>
+            </div>
+            {boardPresent && (
+              <Button variant="outline" onClick={() => setShowForm(false)}>
+                <MdArrowBackIos /> Back To List
+              </Button>
+            )}
+          </div>
         </CardHeader>
+
         <CardContent>
           <Form {...form}>
             <form

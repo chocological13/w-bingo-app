@@ -4,18 +4,24 @@ import { BingoBoard } from "@/constants/types";
 import { useBingoGame } from "@/hooks/useBingoGame";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { MdArrowBackIos } from "react-icons/md";
 
 interface BingoBoardProps {
   board: BingoBoard;
   toggleItemAction: (boardId: string, itemId: string) => void;
+  setSelectedBoardIdAction: (board: BingoBoard | null) => void;
+  resetBoardAction: () => void;
+  randomizedBoardAction: () => void;
 }
 
 export const BingoBoardComponent: React.FC<BingoBoardProps> = ({
   board,
   toggleItemAction,
+  setSelectedBoardIdAction,
+  resetBoardAction,
+  randomizedBoardAction,
 }) => {
-  const { isWinner, completionPercentage, resetBoard, randomizeBoard } =
-    useBingoGame(board);
+  const { isWinner, completionPercentage } = useBingoGame(board);
 
   const handleItemClick = (itemId: string) => {
     if (!isWinner) {
@@ -34,23 +40,33 @@ export const BingoBoardComponent: React.FC<BingoBoardProps> = ({
       )}
 
       <div className="mb-4 flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-heading">{board.title}</h2>
-          <p className="text-sm text-muted-foreground">
-            Completion: {completionPercentage}%
-          </p>
+        <div className="flex flex-col gap-2">
+          <div>
+            <h2 className="text-2xl font-heading mb-1">{board.title}</h2>
+            <p className="text-sm text-muted-foreground">
+              {isWinner
+                ? "BINGO!! You've won!! 🎉"
+                : `{Completion: ${completionPercentage}%}`}
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            onClick={() => setSelectedBoardIdAction(null)}
+          >
+            <MdArrowBackIos /> Back To List
+          </Button>
         </div>
         <div className="flex space-x-2">
           <Button
             variant="outline"
-            onClick={() => randomizeBoard()}
+            onClick={() => randomizedBoardAction()}
             disabled={isWinner}
           >
             Randomize
           </Button>
           <Button
             variant="destructive"
-            onClick={() => resetBoard()}
+            onClick={() => resetBoardAction()}
             disabled={isWinner}
           >
             Reset
