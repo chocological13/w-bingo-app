@@ -210,6 +210,11 @@ export const bingoService = {
         throw new Error("Board not found");
       }
 
+      const boardRef = doc(db, "boards", boardId);
+      await updateDoc(boardRef, {
+        wonAt: null,
+      });
+
       const freeSpaceIndex = board.freeSpace
         ? Math.floor(board.items.length / 2)
         : -1;

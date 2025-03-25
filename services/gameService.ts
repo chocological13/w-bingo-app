@@ -1,5 +1,4 @@
 import { BingoBoard } from "@/constants/types";
-import { bingoService } from "@/services/bingoService";
 
 export const gameService = {
   checkBingoWin: (board: BingoBoard): boolean => {

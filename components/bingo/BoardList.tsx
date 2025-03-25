@@ -1,7 +1,7 @@
 import { BingoBoard } from "@/constants/types";
 import React from "react";
 import { motion } from "framer-motion";
-import { CheckIcon, Grid3X3, Plus } from "lucide-react";
+import { Grid3X3, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { BiSolidTrash } from "react-icons/bi";

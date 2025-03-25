@@ -95,6 +95,28 @@ export const useBingoBoard = () => {
     }
   };
 
+  const randomizeBoard = async (boardId: string) => {
+    try {
+      await bingoService.randomizeBoard(boardId);
+      await fetchBoards();
+      toast.success("Board randomized!");
+    } catch (err) {
+      setError("Failed to randomize board");
+      toast.error(error);
+    }
+  };
+
+  const resetBoard = async (boardId: string) => {
+    try {
+      await bingoService.resetBoard(boardId);
+      await fetchBoards();
+      toast.success("Board reset!");
+    } catch (err) {
+      setError("Failed to reset board");
+      toast.error(error);
+    }
+  };
+
   const deleteBoard = async (boardId: string) => {
     setLoading(true);
     try {
@@ -122,6 +144,8 @@ export const useBingoBoard = () => {
     createNewBoard,
     toggleItem,
     fetchBoards,
+    randomizeBoard,
+    resetBoard,
     deleteBoard,
   };
 };

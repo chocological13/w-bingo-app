@@ -9,12 +9,18 @@ import { BingoBoard } from "@/constants/types";
 import { useBingoGame } from "@/hooks/useBingoGame";
 
 const Bingo = () => {
-  const { boards, createNewBoard, deleteBoard, toggleItem, loading } =
-    useBingoBoard();
+  const {
+    boards,
+    createNewBoard,
+    deleteBoard,
+    toggleItem,
+    randomizeBoard,
+    resetBoard,
+    loading,
+  } = useBingoBoard();
   const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
   const [selectedBoard, setSelectedBoard] = useState<BingoBoard | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const { resetBoard, randomizeBoard } = useBingoGame(selectedBoard);
 
   useEffect(() => {
     if (boards && boards.length > 0) {

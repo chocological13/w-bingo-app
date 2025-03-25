@@ -10,8 +10,8 @@ interface BingoBoardProps {
   board: BingoBoard;
   toggleItemAction: (boardId: string, itemId: string) => void;
   setSelectedBoardIdAction: (board: BingoBoard | null) => void;
-  resetBoardAction: () => void;
-  randomizedBoardAction: () => void;
+  resetBoardAction: (boardId: string) => void;
+  randomizedBoardAction: (boardId: string) => void;
 }
 
 export const BingoBoardComponent: React.FC<BingoBoardProps> = ({
@@ -46,7 +46,7 @@ export const BingoBoardComponent: React.FC<BingoBoardProps> = ({
             <p className="text-sm text-muted-foreground">
               {isWinner
                 ? "BINGO!! You've won!! 🎉"
-                : `{Completion: ${completionPercentage}%}`}
+                : `Completion: ${completionPercentage}%`}
             </p>
           </div>
           <Button
@@ -59,15 +59,14 @@ export const BingoBoardComponent: React.FC<BingoBoardProps> = ({
         <div className="flex space-x-2">
           <Button
             variant="outline"
-            onClick={() => randomizedBoardAction()}
+            onClick={() => randomizedBoardAction(board.id)}
             disabled={isWinner}
           >
             Randomize
           </Button>
           <Button
             variant="destructive"
-            onClick={() => resetBoardAction()}
-            disabled={isWinner}
+            onClick={() => resetBoardAction(board.id)}
           >
             Reset
           </Button>

@@ -33,21 +33,8 @@ export const useBingoGame = (board: BingoBoard | null) => {
     checkGameStatus();
   }, [board, playWinSound, triggerConfettiRain]);
 
-  const resetBoard = async () => {
-    if (!board?.id) return;
-    await bingoService.resetBoard(board.id);
-    setIsWinner(false);
-  };
-
-  const randomizeBoard = async () => {
-    if (!board?.id) return;
-    await bingoService.randomizeBoard(board.id);
-  };
-
   return {
     isWinner,
     completionPercentage,
-    resetBoard,
-    randomizeBoard,
   };
 };
