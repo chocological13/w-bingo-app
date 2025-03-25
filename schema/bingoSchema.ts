@@ -11,7 +11,7 @@ export const bingoFormSchema = z
       .string()
       .max(10, "Free space text must be less than 10 characters")
       .optional(),
-    bulkItems: z.string().optional(),
+    bulkItems: z.string(),
   })
   .superRefine((data, ctx) => {
     // If bulk items are provided, validate

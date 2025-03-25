@@ -26,6 +26,20 @@ import { bingoFormSchema, BingoFormSchemaType } from "@/schema/bingoSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { MdArrowBackIos } from "react-icons/md";
+import {
+  bingoCategoryTemplates,
+  generateBingoItems,
+  generateRandomItems,
+} from "@/utils/bingoItemGenerator";
+import {
+  Select,
+  SelectContent,
+  SelectValue,
+  SelectTrigger,
+  SelectItem,
+} from "@/components/ui/select";
+import { RefreshCcw, Sparkles } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 interface CreateBoardFormProps {
   onSubmit: (
@@ -44,7 +58,9 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
   boardPresent,
 }) => {
   const { playClickSound, playPopSound } = useSoundEffects();
-  const [bulkEntryMode, setBulkEntryMode] = useState<boolean>(false);
+  const [freeSpace, setFreeSpace] = useState<boolean>(false);
+  const [generatedItems, setGeneratedItems] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const form = useForm<BingoFormSchemaType>({
     resolver: zodResolver(bingoFormSchema),
@@ -58,7 +74,30 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
     reValidateMode: "onBlur",
   });
 
+  const handleGenerateItems = (
+    category?: keyof typeof bingoCategoryTemplates
+  ) => {
+    const items = category
+      ? generateBingoItems(freeSpace, 25, category)
+      : generateRandomItems(25, freeSpace);
+
+    setGeneratedItems(items);
+    form.setValue("bulkItems", items.join("\n"));
+    playPopSound();
+  };
+
   const handleSubmit = (values: BingoFormSchemaType) => {
+    // Prioritize generated or manually entered items
+    const items = values.bulkItems
+      ? values.bulkItems.split("\n").filter((item) => item.trim() !== "")
+      : generatedItems;
+
+    // Ensure we have items
+    if (items.length === 0) {
+      handleGenerateItems();
+      return;
+    }
+
     playPopSound();
     onSubmit(
       values.title,
@@ -72,7 +111,7 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
     // loading ||
     form.formState.isSubmitting ||
     !form.watch("title") ||
-    (bulkEntryMode && !form.watch("bulkItems")) ||
+    !form.watch("bulkItems") ||
     !form.formState.isValid;
 
   console.log(form.formState.errors);
@@ -113,7 +152,10 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Board Title</FormLabel>
+                    <FormLabel className="flex flex-row gap-1">
+                      <p>Board Title</p>
+                      <p className="text-xs text-red-500">*required</p>
+                    </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="My Awesome Bingo"
@@ -146,6 +188,7 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
                         onCheckedChange={(checked) => {
                           field.onChange(checked);
                           playClickSound();
+                          setFreeSpace(checked);
                         }}
                       />
                     </FormControl>
@@ -177,54 +220,88 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
                 />
               )}
 
-              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
-                  <FormLabel className="text-base">Bulk Entry Mode</FormLabel>
-                  <FormDescription>
-                    Enter multiple bingo items at once (one per line)
-                  </FormDescription>
-                </div>
-                <FormControl>
-                  <Switch
-                    checked={bulkEntryMode}
-                    onCheckedChange={(checked) => {
-                      setBulkEntryMode(checked);
-                      playClickSound();
-
-                      if (!checked) {
-                        form.resetField("bulkItems", { defaultValue: "" });
-                      }
-                    }}
-                  />
-                </FormControl>
-              </FormItem>
-
-              {bulkEntryMode && (
-                <FormField
-                  control={form.control}
-                  name="bulkItems"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Bingo Items (one per line)</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder={`Enter one bingo item per line
+              <FormField
+                control={form.control}
+                name="bulkItems"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex flex-row justify-between">
+                      <FormLabel className="flex flex-row gap-1">
+                        <p>Bingo Items (one per line)</p>
+                        <p className="text-xs text-red-500">*required</p>
+                      </FormLabel>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        onClick={() => {
+                          form.setValue("bulkItems", ""); // Reset the field
+                          setGeneratedItems([]);
+                        }}
+                      >
+                        Reset
+                      </Button>
+                    </div>
+                    <FormControl>
+                      <Textarea
+                        placeholder={`Enter one bingo item per line
 \nExample:\nWatch a movie\nEat ice cream\nCall a friend\nGo for a walk\nRead a book`}
-                          className="min-h-40 placeholder:text-muted-forground"
-                          {...field}
-                          onChange={(e) => {
-                            field.onChange(e);
-                          }}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Items will be randomly assigned to the board
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
+                        className="min-h-40 placeholder:text-muted-forground"
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                        }}
+                        value={field.value || generatedItems.join("\n")}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      {generatedItems.length > 0
+                        ? "Items randomly generated"
+                        : "Items will be randomly assigned to the board"}
+                    </FormDescription>
+                    <FormMessage />
+                    <div className="grid grid-cols-[5fr_1fr_5fr] items-center font-bold text-center">
+                      <Separator style={{ height: 1 }} />
+                      <p>OR</p>
+                      <Separator style={{ height: 1 }} />
+                    </div>
+                    <p className="text-sm text-center">Generate Random Items</p>
+                    <div className="flex items-center justify-center space-x-2">
+                      <Select
+                        value={selectedCategory || undefined}
+                        onValueChange={(value) => {
+                          setSelectedCategory(value);
+                          handleGenerateItems(
+                            value as keyof typeof bingoCategoryTemplates
+                          );
+                        }}
+                      >
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="Select Category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.keys(bingoCategoryTemplates).map(
+                            (category) => (
+                              <SelectItem key={category} value={category}>
+                                {category.charAt(0).toUpperCase() +
+                                  category.slice(1)}
+                              </SelectItem>
+                            )
+                          )}
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleGenerateItems()}
+                        title="Generate Random Items"
+                      >
+                        <RefreshCcw className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </FormItem>
+                )}
+              />
 
               <Button
                 type="submit"
