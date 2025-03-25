@@ -25,7 +25,7 @@ export const useSoundEffects = () => {
   );
   const [playError] = useSound(
     "/sounds/mixkit-game-show-wrong-answer-buzz-950.wav",
-    { volume: 0.5 }
+    { volume: 0.1 }
   );
 
   // Toggle sound on/off
