@@ -11,6 +11,7 @@ import { useBingoGame } from "@/hooks/useBingoGame";
 const Bingo = () => {
   const {
     boards,
+    fetchBoards,
     createNewBoard,
     deleteBoard,
     toggleItem,

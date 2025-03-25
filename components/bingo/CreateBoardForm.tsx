@@ -54,6 +54,8 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
       freeSpaceText: "FREE",
       bulkItems: "",
     },
+    mode: "onChange",
+    reValidateMode: "onBlur",
   });
 
   const handleSubmit = (values: BingoFormSchemaType) => {
@@ -70,7 +72,10 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
     // loading ||
     form.formState.isSubmitting ||
     !form.watch("title") ||
+    (bulkEntryMode && !form.watch("bulkItems")) ||
     !form.formState.isValid;
+
+  console.log(form.formState.errors);
 
   return (
     <motion.div
@@ -113,6 +118,7 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
                       <Input
                         placeholder="My Awesome Bingo"
                         {...field}
+                        className="placeholder:text-muted-forground"
                         onChange={(e) => {
                           field.onChange(e);
                         }}
@@ -158,6 +164,7 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
                         <Input
                           placeholder="FREE"
                           {...field}
+                          className="placeholder:text-muted-forground"
                           onChange={(e) => {
                             field.onChange(e);
                             playClickSound();
@@ -183,6 +190,10 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
                     onCheckedChange={(checked) => {
                       setBulkEntryMode(checked);
                       playClickSound();
+
+                      if (!checked) {
+                        form.resetField("bulkItems", { defaultValue: "" });
+                      }
                     }}
                   />
                 </FormControl>
@@ -197,8 +208,9 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
                       <FormLabel>Bingo Items (one per line)</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Enter one bingo item per line"
-                          className="min-h-40"
+                          placeholder={`Enter one bingo item per line
+\nExample:\nWatch a movie\nEat ice cream\nCall a friend\nGo for a walk\nRead a book`}
+                          className="min-h-40 placeholder:text-muted-forground"
                           {...field}
                           onChange={(e) => {
                             field.onChange(e);
