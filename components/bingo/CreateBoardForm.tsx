@@ -113,8 +113,7 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
     loading ||
     form.formState.isSubmitting ||
     !form.watch("title") ||
-    !form.watch("bulkItems") ||
-    form.formState.isValid;
+    !form.watch("bulkItems");
 
   return (
     <motion.div
