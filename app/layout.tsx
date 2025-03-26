@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import { AuthProvider } from "@/context/auth-provider";
 import { Toaster } from "@/components/ui/sonner";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
 export const metadata: Metadata = {
   title: "W-Bingo",
   description:
@@ -16,7 +18,7 @@ export const metadata: Metadata = {
       "🔥 Get those Ws with W-Bingo! Create, customize, and play bingo like a champ. 🎉🏆",
     images: [
       {
-        url: "/lottery.svg",
+        url: `${siteUrl}/lottery.png`,
         width: 1200,
         height: 630,
         alt: "W-Bingo App",
@@ -28,7 +30,7 @@ export const metadata: Metadata = {
     title: "W-Bingo",
     description:
       "🔥 Get those Ws with W-Bingo! Create, customize, and play bingo like a champ. 🎉🏆",
-    images: "/lottery.svg",
+    images: `${siteUrl}/lottery.png`,
   },
 };
 
