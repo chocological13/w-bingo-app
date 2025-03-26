@@ -3,12 +3,11 @@ import { headingFont, bodyFont, gameFont, altHeadingFont } from "./fonts";
 import "./globals.css";
 import { ThemeProvider } from "@/context/theme-provider";
 import { cn } from "@/lib/utils";
-import { Layout } from "lucide-react";
 import { AuthProvider } from "@/context/auth-provider";
 import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
-  title: "W Bingo App",
+  title: "W-Bingo App",
   description: `{Putting the "Go" in Bingo}`,
 };
 

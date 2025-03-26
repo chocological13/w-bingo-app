@@ -30,7 +30,12 @@ export const BingoBoardComponent: React.FC<BingoBoardProps> = ({
   };
 
   return (
-    <div className="relative">
+    <motion.div
+      className="relative"
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.05 }}
+    >
       {isWinner && (
         <div className="absolute inset-0 z-10 top-1/2 md:top-50 left-1/2 -translate-x-1/2 text-center">
           <h3 className="md:text-[150px] text-[75px] font-heading text-primary animate-bounce drop-shadow-[0_0_20px_#64748b]">
@@ -106,7 +111,7 @@ export const BingoBoardComponent: React.FC<BingoBoardProps> = ({
           ))}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
