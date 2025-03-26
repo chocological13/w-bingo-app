@@ -20,6 +20,20 @@ const BoardList: React.FC<BoardListProps> = ({
   setShowCreateForm,
   deleteBoard,
 }) => {
+  const handleBoardSelect = (boardId: string, event: React.MouseEvent) => {
+    const target = event.target as HTMLElement;
+    const isDeleteButton = target.closest('button[aria-label="delete-board"]');
+
+    if (!isDeleteButton) {
+      setSelectedBoard(boardId);
+    }
+  };
+
+  const handleDeleteBoard = (boardId: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    deleteBoard(boardId);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -51,7 +65,7 @@ const BoardList: React.FC<BoardListProps> = ({
             <Card
               key={board.id}
               className="hover:shadow-lg transition-shadow cursor-pointer"
-              onClick={() => setSelectedBoard(board.id)}
+              onClick={(e) => handleBoardSelect(board.id, e)}
             >
               <CardHeader className="flex justify-between items-center">
                 <CardTitle className="flex flex-row gap-1 items-center">
@@ -63,7 +77,10 @@ const BoardList: React.FC<BoardListProps> = ({
                     </span>
                   )}
                 </CardTitle>
-                <Button variant="ghost" onClick={() => deleteBoard(board.id)}>
+                <Button
+                  variant="ghost"
+                  onClick={(e) => handleDeleteBoard(board.id, e)}
+                >
                   <BiSolidTrash className="text-red-600" />
                 </Button>
               </CardHeader>

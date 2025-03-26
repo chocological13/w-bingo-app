@@ -282,8 +282,9 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
                           {Object.keys(bingoCategoryTemplates).map(
                             (category) => (
                               <SelectItem key={category} value={category}>
-                                {category.charAt(0).toUpperCase() +
-                                  category.slice(1)}
+                                {category
+                                  .replace(/([a-z])([A-Z])/g, "$1 $2")
+                                  .replace(/^./, (str) => str.toUpperCase())}
                               </SelectItem>
                             )
                           )}
