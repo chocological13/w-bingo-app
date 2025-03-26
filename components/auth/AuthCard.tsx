@@ -93,11 +93,11 @@ const AuthCard = () => {
       className="w-full max-w-md relative"
     >
       {isMobile ? (
-        <div className="grid grid-rows-[1fr_3fr_1fr] justify-center relative h-screen">
+        <div className="grid grid-rows-[1fr_6fr_1fr] justify-center relative h-screen">
           <div className="flex flex-row items-end justify-end mb-4">
             <ThemeToggle />
           </div>
-          <div className="w-full p-4 bg-background/50 backdrop-blur-md rounded-lg shadow-md overflow-hidden">
+          <div className="w-full min-h-full p-4 bg-background/50 backdrop-blur-md rounded-lg shadow-md overflow-hidden overflow-y-scroll">
             {Content}
           </div>
           <div></div>
