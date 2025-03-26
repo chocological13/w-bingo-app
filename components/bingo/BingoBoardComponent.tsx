@@ -56,17 +56,21 @@ export const BingoBoardComponent: React.FC<BingoBoardProps> = ({
             <MdArrowBackIos /> Back To List
           </Button>
         </div>
-        <div className="flex space-x-2">
+        <div className="flex md:flex-row flex-col space-x-2 space-y-2">
           <Button
             variant="outline"
             onClick={() => randomizedBoardAction(board.id)}
             disabled={isWinner}
+            className="w-full md:w-fit md:text-md text-xs"
+            size="sm"
           >
             Randomize
           </Button>
           <Button
             variant="destructive"
             onClick={() => resetBoardAction(board.id)}
+            className="w-full md:w-fit md:text-md text-xs"
+            size="sm"
           >
             Reset
           </Button>

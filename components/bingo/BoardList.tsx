@@ -1,3 +1,4 @@
+"use client";
 import { BingoBoard } from "@/constants/types";
 import React from "react";
 import { motion } from "framer-motion";
@@ -40,9 +41,13 @@ const BoardList: React.FC<BoardListProps> = ({
       animate={{ opacity: 1 }}
       className="space-y-4"
     >
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-heading">My Bingo Boards</h1>
-        <Button variant="outline" onClick={() => setShowCreateForm(true)}>
+      <div className="flex flex-col md:flex-row justify-between items-center space-y-6">
+        <h1 className="text-3xl w-full md:w-auto">My Bingo Boards</h1>
+        <Button
+          variant="outline"
+          onClick={() => setShowCreateForm(true)}
+          className="w-full md:w-auto mb-2 md:mb-0"
+        >
           <Plus className="mr-2 h-4 w-4" /> Create New Board
         </Button>
       </div>
