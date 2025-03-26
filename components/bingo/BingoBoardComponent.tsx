@@ -5,6 +5,7 @@ import { useBingoGame } from "@/hooks/useBingoGame";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { MdArrowBackIos } from "react-icons/md";
+import BingoWin from "./BingoWin";
 
 interface BingoBoardProps {
   board: BingoBoard;
@@ -36,13 +37,7 @@ export const BingoBoardComponent: React.FC<BingoBoardProps> = ({
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay: 0.05 }}
     >
-      {isWinner && (
-        <div className="absolute inset-0 z-10 top-1/2 md:top-50 left-1/2 -translate-x-1/2 text-center">
-          <h3 className="md:text-[150px] text-[75px] font-heading text-primary animate-bounce drop-shadow-[0_0_20px_#64748b]">
-            BINGO! 🎉
-          </h3>
-        </div>
-      )}
+      {isWinner && <BingoWin />}
 
       <div className="mb-4 flex justify-between items-center">
         <div className="flex flex-col gap-2">
@@ -95,10 +90,11 @@ export const BingoBoardComponent: React.FC<BingoBoardProps> = ({
           w-full h-full md:w-32 md:h-32
           overflow-x-auto
           text-xs md:text-md
-          ${item.marked ? "bg-primary/50 text-primary-foreground" : "bg-secondary/20 hover:bg-secondary/40"}
+          ${item.marked ? "bg-primary/50 text-primary-foreground" : "bg-secondary/20"}
+          ${!item.marked && !isWinner && "hover:bg-secondary/40"}
           ${item.text === board.freeSpaceText ? "bg-primary/30 font-bold cursor-none" : ""}
         `}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: isWinner ? 1 : 0.95 }}
               onClick={() => handleItemClick(item.id)}
             >
               <span className="block text-center break-words px-1 overflow-x-auto">
