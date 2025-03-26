@@ -121,10 +121,22 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
+      {boardPresent && (
+        <div className="md:hidden flex justify-end w-full">
+          <Button
+            variant="link"
+            onClick={() => setShowForm(false)}
+            size="sm"
+            className="text-xs"
+          >
+            <MdArrowBackIos /> Back To List
+          </Button>
+        </div>
+      )}
       <Card className="w-full max-w-md mx-auto shadow-lg">
-        <CardHeader className="flex flex-col items-start">
-          <div className="w-full flex justify-between items-center">
-            <div>
+        <CardHeader className="flex flex-col items-start mb-2 md:mb-0">
+          <div className="w-full flex md:flex-row flex-col-reverse justify-between items-center gap-2">
+            <div className="w-full">
               <CardTitle className="font-heading text-primary-600 text-2xl">
                 Create Bingo Board
               </CardTitle>
@@ -133,7 +145,12 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
               </CardDescription>
             </div>
             {boardPresent && (
-              <Button variant="outline" onClick={() => setShowForm(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setShowForm(false)}
+                size="sm"
+                className="hidden md:flex text-xs"
+              >
                 <MdArrowBackIos /> Back To List
               </Button>
             )}
@@ -224,21 +241,27 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
                 name="bulkItems"
                 render={({ field }) => (
                   <FormItem>
-                    <div className="flex flex-row justify-between">
-                      <FormLabel className="flex flex-row gap-1">
-                        <p>Bingo Items (one per line)</p>
-                        <p className="text-xs text-red-500">*required</p>
+                    <div className="flex justify-between items-center">
+                      <FormLabel className="flex md:flex-row flex-col gap-1">
+                        <p className="w-full">Bingo Items (one per line)</p>
+                        <div className="flex justify-start w-full md:w-fit">
+                          <p className="text-xs text-red-500">*required</p>
+                        </div>
                       </FormLabel>
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        onClick={() => {
-                          form.setValue("bulkItems", ""); // Reset the field
-                          setGeneratedItems([]);
-                        }}
-                      >
-                        Reset
-                      </Button>
+                      <div className="flex justify-end">
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          onClick={() => {
+                            form.setValue("bulkItems", ""); // Reset the field
+                            setGeneratedItems([]);
+                          }}
+                          className="text-xs px-2 py-0 md:py-2 h-4"
+                          size="sm"
+                        >
+                          Reset
+                        </Button>
+                      </div>
                     </div>
                     <FormControl>
                       <Textarea
