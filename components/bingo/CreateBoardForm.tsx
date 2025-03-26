@@ -34,11 +34,11 @@ import {
 import {
   Select,
   SelectContent,
-  SelectValue,
-  SelectTrigger,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
-import { RefreshCcw, Sparkles } from "lucide-react";
+import { RefreshCcw } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 interface CreateBoardFormProps {
@@ -48,12 +48,14 @@ interface CreateBoardFormProps {
     freeSpaceText: string,
     bukItems?: string
   ) => void;
+  loading: boolean;
   setShowForm: (show: boolean) => void;
   boardPresent: boolean;
 }
 
 const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
   onSubmit,
+  loading,
   setShowForm,
   boardPresent,
 }) => {
@@ -70,8 +72,8 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
       freeSpaceText: "FREE",
       bulkItems: "",
     },
-    mode: "onChange",
-    reValidateMode: "onBlur",
+    mode: "all",
+    reValidateMode: "onChange",
   });
 
   const handleGenerateItems = (
@@ -108,13 +110,11 @@ const CreateBoardForm: React.FC<CreateBoardFormProps> = ({
   };
 
   const disabled =
-    // loading ||
+    loading ||
     form.formState.isSubmitting ||
     !form.watch("title") ||
     !form.watch("bulkItems") ||
-    !form.formState.isValid;
-
-  console.log(form.formState.errors);
+    form.formState.isValid;
 
   return (
     <motion.div

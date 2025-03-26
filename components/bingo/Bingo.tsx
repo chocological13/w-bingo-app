@@ -6,12 +6,10 @@ import { useBingoBoard } from "@/hooks/useBingoBoard";
 import LoaderSpinner from "@/components/LoaderSpinner";
 import BoardList from "@/components/bingo/BoardList";
 import { BingoBoard } from "@/constants/types";
-import { useBingoGame } from "@/hooks/useBingoGame";
 
 const Bingo = () => {
   const {
     boards,
-    fetchBoards,
     createNewBoard,
     deleteBoard,
     toggleItem,
@@ -73,6 +71,7 @@ const Bingo = () => {
       {showCreateForm ? (
         <CreateBoardForm
           onSubmit={handleCreateBoard}
+          loading={loading}
           setShowForm={setShowCreateForm}
           boardPresent={boards && boards.length > 0 ? true : false}
         />

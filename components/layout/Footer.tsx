@@ -3,8 +3,10 @@ import { Heart } from "lucide-react";
 import Link from "next/link";
 
 const Footer = ({ className }: { className?: string }) => {
-  const githubUsername = process.env.NEXT_PUBLIC_GITHUB_USERNAME || "";
-  const githubUrl = process.env.NEXT_PUBLIC_GITHUB_URL || "";
+  const githubUsername =
+    process.env.NEXT_PUBLIC_GITHUB_USERNAME || "chocological13";
+  const githubUrl =
+    process.env.NEXT_PUBLIC_GITHUB_URL || "https://github.com/chocological13";
 
   return (
     <footer className={className}>
@@ -14,7 +16,9 @@ const Footer = ({ className }: { className?: string }) => {
           <Heart className="inline-block h-4 w-4 animate-bounce-slight fill-primary-500 text-primary-500" />{" "}
           by{" "}
           <span className="font-bold hover:underline cursor-pointer">
-            <Link href={githubUrl}>{githubUsername}</Link>
+            <Link href={githubUrl} passHref target="_blank">
+              {githubUsername}
+            </Link>
           </span>
         </p>
       </div>

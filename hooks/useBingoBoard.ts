@@ -10,7 +10,8 @@ export const useBingoBoard = () => {
   const [boards, setBoards] = useState<BingoBoard[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const { playClickSound, playPopSound, playErrorSound } = useSoundEffects();
+  const { playClickSound, playPopSound, playErrorSound, playGameStartSound } =
+    useSoundEffects();
 
   useEffect(() => {
     if (user) {
@@ -58,6 +59,7 @@ export const useBingoBoard = () => {
       );
       await fetchBoards();
       toast.success("Board created successfully!");
+      playGameStartSound();
       return boardId;
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -130,6 +132,7 @@ export const useBingoBoard = () => {
       await fetchBoards();
 
       toast.success("Board deleted successfully!!");
+      playPopSound();
     } catch (err) {
       setError("Failed to delete board");
       toast.error(error);
