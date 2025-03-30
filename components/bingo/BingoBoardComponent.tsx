@@ -1,34 +1,67 @@
 "use client";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { BingoBoard } from "@/constants/types";
 import { useBingoGame } from "@/hooks/useBingoGame";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { MdArrowBackIos } from "react-icons/md";
 import BingoWin from "./BingoWin";
+import { useRouter } from "next/navigation";
+import { useBingoBoard } from "@/hooks/useBingoBoard";
+import LoaderSpinner from "@/components/LoaderSpinner";
 
 interface BingoBoardProps {
-  board: BingoBoard;
-  toggleItemAction: (boardId: string, itemId: string) => void;
-  setSelectedBoardIdAction: (board: BingoBoard | null) => void;
-  resetBoardAction: (boardId: string) => void;
-  randomizedBoardAction: (boardId: string) => void;
+  boardId: string;
 }
 
-export const BingoBoardComponent: React.FC<BingoBoardProps> = ({
-  board,
-  toggleItemAction,
-  setSelectedBoardIdAction,
-  resetBoardAction,
-  randomizedBoardAction,
-}) => {
-  const { isWinner, completionPercentage } = useBingoGame(board);
+export const BingoBoardComponent: React.FC<BingoBoardProps> = ({ boardId }) => {
+  const [selectedBoard, setSelectedBoard] = useState<BingoBoard | null>(null);
+  const { boards, loading, error, toggleItem, randomizeBoard, resetBoard } =
+    useBingoBoard();
 
-  const handleItemClick = (itemId: string) => {
-    if (!isWinner) {
-      toggleItemAction(board.id, itemId);
+  useEffect(() => {
+    if (boardId && boards?.length > 0) {
+      const board = boards.find((b) => b.id === boardId);
+      if (board) {
+        setSelectedBoard(board);
+      }
     }
-  };
+  }, [boardId, boards]);
+
+  const { isWinner, completionPercentage } = useBingoGame(selectedBoard);
+  const router = useRouter();
+
+  const handleBackToDashboard = useCallback(() => {
+    router.push("/dashboard");
+  }, [router]);
+
+  const handleItemClick = useCallback(
+    (itemId: string) => {
+      if (selectedBoard && !isWinner) {
+        toggleItem(selectedBoard.id, itemId);
+      }
+    },
+    [selectedBoard, isWinner, toggleItem]
+  );
+
+  const handleRandomize = useCallback(() => {
+    console.log("randomize clicked");
+    if (selectedBoard) {
+      randomizeBoard(selectedBoard.id);
+    }
+  }, [selectedBoard, randomizeBoard]);
+
+  const handleReset = useCallback(() => {
+    if (selectedBoard) {
+      resetBoard(selectedBoard.id);
+    }
+  }, [selectedBoard, resetBoard]);
+
+  if (!selectedBoard || error) {
+    return null;
+  } else if (loading) {
+    return <LoaderSpinner />;
+  }
 
   return (
     <motion.div
@@ -42,24 +75,23 @@ export const BingoBoardComponent: React.FC<BingoBoardProps> = ({
       <div className="mb-4 flex justify-between items-center">
         <div className="flex flex-col gap-2">
           <div>
-            <h2 className="text-2xl font-heading mb-1">{board.title}</h2>
+            <h2 className="text-2xl font-heading mb-1">
+              {selectedBoard.title}
+            </h2>
             <p className="text-sm text-muted-foreground">
               {isWinner
                 ? "BINGO!! You've won!! 🎉"
                 : `Completion: ${completionPercentage}%`}
             </p>
           </div>
-          <Button
-            variant="outline"
-            onClick={() => setSelectedBoardIdAction(null)}
-          >
+          <Button variant="outline" onClick={handleBackToDashboard}>
             <MdArrowBackIos /> Back To List
           </Button>
         </div>
         <div className="flex md:flex-row flex-col space-x-2 space-y-2">
           <Button
             variant="outline"
-            onClick={() => randomizedBoardAction(board.id)}
+            onClick={handleRandomize}
             disabled={isWinner}
             className="w-full md:w-fit md:text-md text-xs"
             size="sm"
@@ -68,7 +100,7 @@ export const BingoBoardComponent: React.FC<BingoBoardProps> = ({
           </Button>
           <Button
             variant="destructive"
-            onClick={() => resetBoardAction(board.id)}
+            onClick={handleReset}
             className="w-full md:w-fit md:text-md text-xs"
             size="sm"
           >
@@ -81,10 +113,10 @@ export const BingoBoardComponent: React.FC<BingoBoardProps> = ({
         <div
           className="grid gap-2 bg-secondary/10 p-2 rounded-lg"
           style={{
-            gridTemplateColumns: `repeat(${board.size}, minmax(0, 1fr))`,
+            gridTemplateColumns: `repeat(${selectedBoard.size}, minmax(0, 1fr))`,
           }}
         >
-          {board.items.map((item) => (
+          {selectedBoard.items.map((item) => (
             <motion.div
               key={item.id}
               className={`
@@ -96,7 +128,7 @@ export const BingoBoardComponent: React.FC<BingoBoardProps> = ({
           text-xs md:text-md
           ${item.marked ? "bg-primary/50 text-primary-foreground" : "bg-secondary/20"}
           ${!item.marked && !isWinner && "hover:bg-secondary/40"}
-          ${item.text === board.freeSpaceText ? "bg-primary/30 font-bold cursor-none" : ""}
+          ${item.text === selectedBoard.freeSpaceText ? "bg-primary/30 font-bold cursor-none" : ""}
         `}
               whileTap={{ scale: isWinner ? 1 : 0.95 }}
               onClick={() => handleItemClick(item.id)}

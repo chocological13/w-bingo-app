@@ -1,40 +1,29 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import CreateBoardForm from "@/components/bingo/CreateBoardForm";
-import BingoBoardComponent from "@/components/bingo/BingoBoardComponent";
+"use effect";
+import React, { useState } from "react";
 import { useBingoBoard } from "@/hooks/useBingoBoard";
 import LoaderSpinner from "@/components/LoaderSpinner";
+import CreateBoardForm from "@/components/bingo/CreateBoardForm";
 import BoardList from "@/components/bingo/BoardList";
-import { BingoBoard } from "@/constants/types";
+import { useRouter } from "next/navigation";
 
-const Bingo = () => {
-  const {
-    boards,
-    createNewBoard,
-    deleteBoard,
-    toggleItem,
-    randomizeBoard,
-    resetBoard,
-    loading,
-  } = useBingoBoard();
+const Dashboard: React.FC = () => {
+  const { boards, createNewBoard, deleteBoard, loading } = useBingoBoard();
   const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
-  const [selectedBoard, setSelectedBoard] = useState<BingoBoard | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
-
-  useEffect(() => {
-    if (boards && boards.length > 0) {
-      const board = boards.find((b) => b.id === selectedBoardId);
-      if (board) {
-        setSelectedBoard(board);
-      }
-    }
-  }, [selectedBoardId, boards]);
+  const router = useRouter();
 
   const handleSelectBoard = (boardId: string) => {
     // Force state update even if selecting the same board
     // To make sure we can select the same board after going back to the list
     setSelectedBoardId(null); // Reset first
-    setTimeout(() => setSelectedBoardId(boardId), 0); // Set new board after a brief delay
+    setTimeout(() => goToBoard(boardId), 0); // Set new board after a brief delay
+  };
+
+  const goToBoard = (boardId: string) => {
+    setSelectedBoardId(boardId);
+    if (selectedBoardId) {
+      router.push(`game/${selectedBoardId}`);
+    }
   };
 
   const handleCreateBoard = async (
@@ -57,12 +46,12 @@ const Bingo = () => {
     );
 
     if (newBoardId) {
-      setSelectedBoardId(newBoardId);
+      handleSelectBoard(newBoardId);
       setShowCreateForm(false);
     }
   };
 
-  if (loading) {
+  if (loading || !boards) {
     return <LoaderSpinner />;
   }
 
@@ -74,14 +63,6 @@ const Bingo = () => {
           loading={loading}
           setShowForm={setShowCreateForm}
           boardPresent={boards && boards.length > 0 ? true : false}
-        />
-      ) : selectedBoard ? (
-        <BingoBoardComponent
-          board={selectedBoard}
-          toggleItemAction={toggleItem}
-          setSelectedBoardIdAction={setSelectedBoard}
-          resetBoardAction={resetBoard}
-          randomizedBoardAction={randomizeBoard}
         />
       ) : (
         <BoardList
@@ -95,4 +76,4 @@ const Bingo = () => {
   );
 };
 
-export default Bingo;
+export default Dashboard;

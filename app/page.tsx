@@ -1,20 +1,19 @@
 "use client";
-import LayoutWrapper from "@/components/layout/Layout";
 import { useAuth } from "@/context/auth-provider";
-import Auth from "@/components/auth/Auth";
-import Bingo from "@/components/bingo/Bingo";
+import { useRouter } from "next/navigation";
+import LoaderSpinner from "@/components/LoaderSpinner";
 
 export default function Home() {
-  const { user } = useAuth();
-  return (
-    <>
-      {user ? (
-        <LayoutWrapper>
-          <Bingo />
-        </LayoutWrapper>
-      ) : (
-        <Auth />
-      )}
-    </>
-  );
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  if (user) {
+    router.push("/dashboard");
+  } else {
+    router.push("/auth");
+  }
+
+  if (loading) {
+    return <LoaderSpinner />;
+  }
 }

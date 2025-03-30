@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { headingFont, bodyFont, gameFont, altHeadingFont } from "./fonts";
+import { altHeadingFont, bodyFont, gameFont, headingFont } from "./fonts";
 import "./globals.css";
 import { ThemeProvider } from "@/context/theme-provider";
 import { cn } from "@/lib/utils";
